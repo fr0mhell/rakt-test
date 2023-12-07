@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.gis.db import models as gis_models
+from django.db import models
 from django.utils.text import slugify
 
 
@@ -25,11 +25,15 @@ class NameAndSlugModel(models.Model):
 
 
 class Applicant(NameAndSlugModel):
-    ...
+
+    class Meta:
+        ordering = ['slug']
 
 
 class FoodItem(NameAndSlugModel):
-    ...
+
+    class Meta:
+        ordering = ['slug']
 
 
 class Truck(models.Model):
@@ -44,7 +48,7 @@ class Truck(models.Model):
     lot = models.CharField(max_length=20, blank=True)
     permit = models.CharField(max_length=20, blank=True)
     status = models.CharField(max_length=20, blank=True)
-    food_items = models.TextField(blank=True)
+
     x = models.DecimalField(max_digits=16, decimal_places=8, blank=True, null=True)
     y = models.DecimalField(max_digits=16, decimal_places=8, blank=True, null=True)
     location = gis_models.PointField(null=True, blank=True)
@@ -62,7 +66,7 @@ class Truck(models.Model):
     neighborhoods = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        ordering = ['location_id']
+        ordering = ['applicant_id']
 
     def __str__(self):
         return f'{self.applicant} - {self.location_id}'
@@ -76,4 +80,3 @@ class TruckFoodItem(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['truck', 'food_item'], name='truck_food_item_unique'),
         ]
-
