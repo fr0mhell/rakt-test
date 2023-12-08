@@ -1,0 +1,18 @@
+# Django
+Django<5
+djangorestframework
+markdown
+django-filter
+
+# Database
+psycopg2
+gdal==3.6.2
+
+# Environment variables
+environs
+
+# Linters
+isort
+
+# Documentation
+drf-yasg

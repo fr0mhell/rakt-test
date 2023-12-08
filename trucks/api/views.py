@@ -1,10 +1,34 @@
+from django.conf import settings
+
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, mixins
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from trucks import models
 from trucks.api import filters, serializers
+
+lat = openapi.Parameter(
+    'lat',
+    openapi.IN_QUERY,
+    description='User\'s latitude',
+    type=openapi.TYPE_NUMBER,
+)
+lon = openapi.Parameter(
+    'lon',
+    openapi.IN_QUERY,
+    description='User\'s longitude',
+    type=openapi.TYPE_NUMBER,
+)
+radius_m = openapi.Parameter(
+    'radius_m',
+    openapi.IN_QUERY,
+    description=f'Radius of search in meters. Max radius is {settings.MAX_RADIUS} meters.',
+    type=openapi.TYPE_INTEGER,
+)
 
 
 class ApplicantViewSet(
@@ -61,9 +85,16 @@ class TruckViewSet(
         'status',
     ]
 
+    @swagger_auto_schema(
+        manual_parameters=[lat, lon, radius_m],
+        operation_description=(
+            f'Return a list of Trucks ordered by distance from given point in some radius (meters). '
+            f'Max radius is {settings.MAX_RADIUS} meters.'
+        ),
+    )
     @action(detail=False, url_path='nearest-in-radius')
     def nearest_in_radius(self, request, *args, **kwargs):
-        """Return a list of Trucks ordered by distance from given point in some radius (meters)."""
+        """Return a paginated list of Trucks with distance from given point in some radius (meters)."""
         query_params = serializers.InRadiusSerializer(data=request.query_params)
         query_params.is_valid(raise_exception=True)
 

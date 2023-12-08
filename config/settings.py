@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from environs import Env
 
 env = Env()
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework',
     'django_filters',
+    'drf_yasg',
     'trucks',
 ]
 
@@ -107,8 +109,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Geo Django
-# GDAL_LIBRARY_PATH = env.str('GDAL_LIBRARY_PATH', '/opt/homebrew/Cellar/gdal/3.6.2/lib/libgdal.dylib')
+# Geo Django. Uncomment for local development
+# GDAL_LIBRARY_PATH = env.str('GDAL_LIBRARY_PATH', '/opt/homebrew/Cellar/gdal/3.8.1_1/lib/libgdal.dylib')
 # GEOS_LIBRARY_PATH = env.str('GEOS_LIBRARY_PATH', '/opt/homebrew/Cellar/geos/3.12.1/lib/libgeos_c.dylib')
 
 REST_FRAMEWORK = {
