@@ -8,7 +8,6 @@ from django_filters import (
     DateTimeFromToRangeFilter,
     Filter,
     FilterSet,
-    NumberFilter,
 )
 
 from trucks.models import Truck
@@ -29,10 +28,8 @@ class TruckFilter(FilterSet):
     applicant_id = CharFilter(field_name='applicant_id', lookup_expr='icontains')
     facility_type = CharFilter(field_name='applicant_id', lookup_expr='icontains')
     food_items = FoodItemsFilter(field_name='food_items')
-    status = CharFilter(field_name='status', lookup_expr='icontains')
     approved = DateTimeFromToRangeFilter(field_name='approved')
     expiration_date = DateTimeFromToRangeFilter(field_name='expiration_date')
-    max_distance = NumberFilter(field_name='distance_m', lookup_expr='lte')
 
     class Meta:
         model = Truck
@@ -43,5 +40,4 @@ class TruckFilter(FilterSet):
             'status',
             'approved',
             'expiration_date',
-            'max_distance',
         )

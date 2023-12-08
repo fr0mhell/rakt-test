@@ -1,4 +1,6 @@
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, mixins
 
 from trucks import models
@@ -58,3 +60,19 @@ class TruckViewSet(
         'permit',
         'status',
     ]
+
+    @action(detail=False, url_path='nearest-in-radius')
+    def nearest_in_radius(self, request, *args, **kwargs):
+        """Return a list of Trucks ordered by distance from given point in some radius (meters)."""
+        query_params = serializers.InRadiusSerializer(data=request.query_params)
+        query_params.is_valid(raise_exception=True)
+
+        queryset = self.filter_queryset(self.get_queryset().within_radius(**query_params.validated_data))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
