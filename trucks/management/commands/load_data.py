@@ -1,13 +1,14 @@
+import datetime as dt
+from csv import DictReader
+from decimal import Decimal
+from logging import getLogger
 from typing import Any
 
 from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
+
 from trucks import models
-from decimal import Decimal
-import datetime as dt
-from logging import getLogger
-from csv import DictReader
 
 logger = getLogger(__name__)
 

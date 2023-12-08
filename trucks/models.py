@@ -39,6 +39,7 @@ class FoodItem(NameAndSlugModel):
 class Truck(models.Model):
     location_id = models.IntegerField()
     applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE)
+    food_items = models.ManyToManyField(to=FoodItem, blank=True, through='TruckFoodItem')
     facility_type = models.CharField(max_length=255)
     cnn = models.IntegerField()
     location_description = models.TextField(blank=True)
@@ -70,6 +71,20 @@ class Truck(models.Model):
 
     def __str__(self):
         return f'{self.applicant} - {self.location_id}'
+
+    @property
+    def distance_m(self) -> float:
+        """Distance in meters from current user's point.
+
+        Set to -1 if user's point is not set.
+
+        """
+        return -1.0
+
+    @property
+    def google_maps_url(self) -> str:
+        """URL to Google Maps with Truck's location."""
+        return f'https://www.google.com/maps/search/?api=1&query={self.location.y},{self.location.x}'
 
 
 class TruckFoodItem(models.Model):

@@ -25,7 +25,7 @@ class FoodItemSerializer(serializers.ModelSerializer):
 
 class TruckSerializer(serializers.ModelSerializer):
     applicant_data = ApplicantSerializer(source='applicant', read_only=True)
-    food_items = FoodItemSerializer(source='truckfooditem_set', many=True, read_only=True)
+    food_items = FoodItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Truck
@@ -38,6 +38,10 @@ class TruckSerializer(serializers.ModelSerializer):
             'location',
             'location_description',
             'schedule',
+            'days_hours',
+            'food_items',
+            'distance_m',
+            'google_maps_url',
             'address',
             'blocklot',
             'block',
@@ -46,7 +50,6 @@ class TruckSerializer(serializers.ModelSerializer):
             'status',
             'x',
             'y',
-            'days_hours',
             'noi_sent',
             'approved',
             'received',
