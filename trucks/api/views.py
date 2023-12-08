@@ -16,12 +16,14 @@ lat = openapi.Parameter(
     openapi.IN_QUERY,
     description='User\'s latitude',
     type=openapi.TYPE_NUMBER,
+    required=True,
 )
 lon = openapi.Parameter(
     'lon',
     openapi.IN_QUERY,
     description='User\'s longitude',
     type=openapi.TYPE_NUMBER,
+    required=True,
 )
 radius_m = openapi.Parameter(
     'radius_m',
@@ -35,7 +37,11 @@ class ApplicantViewSet(
     mixins.ListModelMixin,
     GenericViewSet,
 ):
-    """Read-only API that shows list of Applicants."""
+    """Read-only API that shows list of Applicants.
+
+    Use `slug` value to filter Trucks by applicant_id and `name` for UI purposes.
+
+    """
     queryset = models.Applicant.objects.all()
     serializer_class = serializers.ApplicantSerializer
     # Omit authentication in order to focus on main features.
@@ -46,7 +52,11 @@ class FoodItemViewSet(
     mixins.ListModelMixin,
     GenericViewSet,
 ):
-    """Read-only API that shows list of Food Items."""
+    """Read-only API that shows list of Food Items.
+
+    Use `slug` values to filter Trucks by food_items and `name` for UI purposes.
+
+    """
     queryset = models.FoodItem.objects.all()
     serializer_class = serializers.FoodItemSerializer
     # Omit authentication in order to focus on main features.
@@ -88,7 +98,7 @@ class TruckViewSet(
     @swagger_auto_schema(
         manual_parameters=[lat, lon, radius_m],
         operation_description=(
-            f'Return a list of Trucks ordered by distance from given point in some radius (meters). '
+            f'List of Trucks ordered by distance from given point (`lon`, `lat`) in some radius `radius_m` (meters). '
             f'Max radius is {settings.MAX_RADIUS} meters.'
         ),
     )
@@ -98,7 +108,7 @@ class TruckViewSet(
         query_params = serializers.InRadiusSerializer(data=request.query_params)
         query_params.is_valid(raise_exception=True)
 
-        queryset = self.filter_queryset(self.get_queryset().within_radius(**query_params.validated_data))
+        queryset = self.filter_queryset(self.get_queryset().in_radius(**query_params.validated_data))
 
         page = self.paginate_queryset(queryset)
         if page is not None:

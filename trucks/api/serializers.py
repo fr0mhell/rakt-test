@@ -75,4 +75,4 @@ class InRadiusSerializer(serializers.Serializer):
     """Used to validate query parameters for the `nearest_in_radius`."""
     lat = serializers.FloatField(required=True, min_value=-180, max_value=180)
     lon = serializers.FloatField(required=True, min_value=-180, max_value=180)
-    radius_m = serializers.IntegerField(min_value=1, max_value=settings.MAX_RADIUS, default=100)
+    radius_m = serializers.IntegerField(min_value=1, max_value=settings.MAX_RADIUS, default=settings.MAX_RADIUS)

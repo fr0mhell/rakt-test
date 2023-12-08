@@ -20,7 +20,8 @@ class FoodItemsFilter(Filter):
             return qs
 
         values = value.split(',')
-        qs = qs.filter(reduce(and_, [Q(food_items__slug=v) for v in values]))
+        for v in values:
+            qs = qs.filter(food_items__slug=v)
         return qs
 
 
